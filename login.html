@@ -1,73 +1,44 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Login Page</title>
-  <style>
-    body {
-      background-color: #000;
-      color: #fff;
-      font-family: Arial, sans-serif;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      margin: 0;
-    }
-    form {
-      background-color: #111;
-      padding: 30px;
-      border-radius: 10px;
-      box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
-      width: 100%;
-      max-width: 300px;
-    }
-    input, button {
-      display: block;
-      width: 100%;
-      margin-bottom: 15px;
-      padding: 10px;
-      border: none;
-      border-radius: 5px;
-    }
-    input {
-      background-color: #222;
-      color: #fff;
-    }
-    button {
-      background-color: #00bcd4;
-      color: #000;
-      cursor: pointer;
-    }
-    button:hover {
-      background-color: #0097a7;
-    }
-  </style>
+  <title>Login with Google Sheets</title>
 </head>
 <body>
-  <form id="login-form">
-    <h2 style="text-align:center; margin-bottom: 20px;">Login</h2>
-    <input type="text" id="username" placeholder="Username" required />
-    <input type="password" id="password" placeholder="Password" required />
+  <h2>Login</h2>
+  <form id="loginForm">
+    <input type="email" id="email" placeholder="Email" required><br><br>
+    <input type="password" id="password" placeholder="Password" required><br><br>
     <button type="submit">Login</button>
   </form>
 
-  <script>
-    const scriptURL = 'https://script.google.com/macros/s/AKfycbw-XiKbER_3nFHsNMtFct4rUPG2o2W0vTyoOZutDJeyyquUMW7gF2mCqXFMw60qH7sC/exec';
-    document.getElementById('login-form').addEventListener('submit', function(e) {
-      e.preventDefault();
+  <p id="message"></p>
 
-      const username = document.getElementById('username').value;
+  <script>
+    const form = document.getElementById('loginForm');
+    const msg = document.getElementById('message');
+
+    form.addEventListener('submit', function(e) {
+      e.preventDefault();
+      const email = document.getElementById('email').value;
       const password = document.getElementById('password').value;
 
-      fetch(scriptURL, {
+      fetch('https://script.google.com/macros/s/AKfycby-Dnv9LgBUIry8VJ2YdhN1E0tm9IJlFinUL17R39gZ_szze-SWZTEWUXlAza4l5bMw/exec', {
         method: 'POST',
-        body: JSON.stringify({ username, password }),
-        headers: {
-          'Content-Type': 'application/json'
+        body: new URLSearchParams({email, password})
+      })
+      .then(res => res.text())
+      .then(data => {
+        if (data === "success") {
+          msg.textContent = "Login successful!";
+          msg.style.color = "green";
+        } else {
+          msg.textContent = "Invalid email or password.";
+          msg.style.color = "red";
         }
       })
-      .then(response => alert('Login data sent!'))
-      .catch(error => alert('Error! ' + error.message));
+      .catch(error => {
+        msg.textContent = "Error: " + error;
+      });
     });
   </script>
 </body>
