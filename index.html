@@ -1,11 +1,85 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta http-equiv="refresh" content="0; URL='https://orpheus-three.vercel.app/'" />
-  <title>Redirecting...</title>
+  <meta charset="UTF-8">
+  <title>Timer Redirect Page</title>
+  <style>
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      font-family: Arial, sans-serif;
+      background: #f5f5f5;
+    }
+
+    button {
+      padding: 30px 60px;
+      font-size: 24px;
+      background-color: #007BFF;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #0056b3;
+    }
+
+    .message {
+      font-size: 22px;
+      color: #333;
+    }
+  </style>
 </head>
 <body>
-  <p>If you are not redirected, <a href="https://orpheus-three.vercel.app/">click here</a>.</p>
+
+<div id="content"></div>
+
+<script>
+  const FIRST_LINK = "https://example.com";      // Link to visit first
+  const SECOND_LINK = "https://orpheus-three.vercel.app/";      // Link after 10 seconds
+  const WAIT_TIME = 10 * 1000; // 10 seconds
+
+  const content = document.getElementById("content");
+  const startTime = localStorage.getItem("startTime");
+
+  function showFirstButton(message = null) {
+    content.innerHTML = `
+      ${message ? `<p class="message">${message}</p>` : ""}
+      <button onclick="startProcess()">Start Process</button>
+    `;
+  }
+
+  function showSecondButton() {
+    content.innerHTML = `
+      <button onclick="window.location.href='${SECOND_LINK}'">
+        Continue
+      </button>
+    `;
+  }
+
+  function startProcess() {
+    localStorage.setItem("startTime", Date.now());
+    window.location.href = FIRST_LINK;
+  }
+
+  // On page load (when user comes back)
+  if (!startTime) {
+    showFirstButton();
+  } else {
+    const elapsed = Date.now() - parseInt(startTime);
+
+    if (elapsed >= WAIT_TIME) {
+      localStorage.removeItem("startTime");
+      showSecondButton();
+    } else {
+      localStorage.removeItem("startTime");
+      showFirstButton("You did not wait 10 seconds. Please try again.");
+    }
+  }
+</script>
+
 </body>
 </html>
