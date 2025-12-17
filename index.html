@@ -48,14 +48,14 @@
   function showFirstButton(message = null) {
     content.innerHTML = `
       ${message ? `<p class="message">${message}</p>` : ""}
-      <button onclick="startProcess()">Start Process</button>
+      <button onclick="startProcess()">Click on this button and wait 10 sec on that page and then return to this page to get the link</button>
     `;
   }
 
   function showSecondButton() {
     content.innerHTML = `
       <button onclick="window.location.href='${SECOND_LINK}'">
-        Click on this button and wait 10 sec on that page and then return to this page to get the link
+        Here is your link
       </button>
     `;
   }
